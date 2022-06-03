@@ -1,6 +1,6 @@
 import argparse
 import json
-
+import sys
 
 parser = argparse.ArgumentParser(
     prog='eflint',
@@ -12,6 +12,7 @@ parser.add_argument('--mock', action='store_true', help='return test json.')
 
 def main():
     args = parser.parse_args()
+    code = ''.join(sys.stdin.readlines())
 
     if args.mock:
         params = [
@@ -23,7 +24,7 @@ def main():
                         'lineEnd': 0,
                         'columnEnd': 5,
                         'code': 'ep000',
-                        'message': 'ごみコードです',
+                        'message': f'ごみコード（{code[0:5]}）です',
                         'severity': 2,
                         'source': 'eflint',
                         'correctable': 1,
