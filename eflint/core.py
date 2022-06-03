@@ -26,7 +26,19 @@ def main():
                         'message': 'ごみコードです',
                         'severity': 2,
                         'source': 'eflint',
-                        'correctable': 0
+                        'correctable': 1,
+                        'docsUrl': 'https://code.visualstudio.com/api',
+                        'inlineFix': {
+                            'replacement': 'replaced',
+                            'start': {
+                                'column': 0,
+                                'line': 0
+                            },
+                            'end': {
+                                'column': 5,
+                                'line': 0
+                            }
+                        }
                     }
                 ]
             }
