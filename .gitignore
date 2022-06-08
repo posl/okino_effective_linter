@@ -1,2 +1,7 @@
+0ld
 __pycache__
-test.*
+test.ipynb
+test_fix.py
+test_debug.py
+*.pickle
+lib2to3.md
