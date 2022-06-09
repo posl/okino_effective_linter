@@ -5,3 +5,4 @@ test_fix.py
 test_debug.py
 *.pickle
 lib2to3.md
+*.log

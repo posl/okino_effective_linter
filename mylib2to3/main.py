@@ -2,6 +2,7 @@
 Main program for 2to3.
 """
 
+
 from __future__ import with_statement, print_function
 
 import sys
@@ -191,8 +192,8 @@ def main(fixer_pkg, args=None):
     if options.add_suffix and not options.nobackups:
         parser.error("Can't use --add-suffix without -n.")
 
-    if not options.write and options.no_diffs:
-        warn("not writing files and not printing diffs; that's not very useful")
+    # if not options.write and options.no_diffs:
+    #     warn("not writing files and not printing diffs; that's not very useful")
     if not options.write and options.nobackups:
         parser.error("Can't use -n without -w")
     if options.list_fixes:
@@ -218,7 +219,7 @@ def main(fixer_pkg, args=None):
 
     # Set up logging handler
     level = logging.DEBUG if options.verbose else logging.INFO
-    logging.basicConfig(format='%(name)s: %(message)s', level=level)
+    logging.basicConfig(format='%(name)s: %(message)s', level=level, filename="logging.log", filemode="w") # ルートロガーの設定
     logger = logging.getLogger('lib2to3.main')
 
     # Initialize the refactoring tool
@@ -267,7 +268,7 @@ def main(fixer_pkg, args=None):
                 print("Sorry, -j isn't supported on this platform.",
                       file=sys.stderr)
                 return 1
-        rt.summarize()
+        # rt.summarize()
 
     # Return error status (0 if rt.errors is zero)
     return int(bool(rt.errors))

@@ -414,7 +414,7 @@ class RefactoringTool(object):
         match_set = self.BM.run(tree.leaves()) # {fixerの集合<fixerのインスタンス([マッチした部分のリスト])>}
 
         while any(match_set.values()):
-            for fixer in self.BM.fixers:
+            for fixer in self.BM.fixers: # 各修正プログラムに対して
                 if fixer in match_set and match_set[fixer]:
                     #sort by depth; apply fixers from bottom(of the AST) to top
                     match_set[fixer].sort(key=pytree.Base.depth, reverse=True)
@@ -424,7 +424,7 @@ class RefactoringTool(object):
                         #with the original file's line order
                         match_set[fixer].sort(key=pytree.Base.get_lineno)
 
-                    for node in list(match_set[fixer]):
+                    for node in list(match_set[fixer]): # 各修正ノードに対して
                         if node in match_set[fixer]:
                             match_set[fixer].remove(node)
 
@@ -442,9 +442,12 @@ class RefactoringTool(object):
                         results = fixer.match(node)
 
                         if results:
-                            new = fixer.transform(node, results) # 修正後
+                            print(node.get_lineno(), node.get_columnno(), node.get_end_lineno(), node.get_end_columnno()) #
+                            print(fixer.CODE, fixer.MESSAGE, fixer.SEVERITY)
+                            new = fixer.transform(node, results) # 修正ノードの作成
+                            print(str(new))
                             if new is not None:
-                                node.replace(new)
+                                node.replace(new) # 置き換え
                                 #new.fixers_applied.append(fixer)
                                 for node in new.post_order():
                                     # do not apply the fixer again to

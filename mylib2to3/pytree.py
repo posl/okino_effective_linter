@@ -127,8 +127,32 @@ class Base(object):
         while not isinstance(node, Leaf):
             if not node.children:
                 return
-            node = node.children[0]
+            node = node.children[0] # 最初のchildのlineno
         return node.lineno
+
+    def get_columnno(self):
+        node = self
+        while not isinstance(node, Leaf):
+            if not node.children:
+                return
+            node = node.children[0]
+        return node.column
+
+    def get_end_lineno(self):
+        node = self
+        while not isinstance(node, Leaf):
+            if not node.children:
+                return
+            node = node.children[-1] # 
+        return node.lineno
+
+    def get_end_columnno(self):
+        node = self
+        while not isinstance(node, Leaf):
+            if not node.children:
+                return
+            node = node.children[-1] #
+        return node.column + len(node.value)
 
     def changed(self):
         if self.parent:

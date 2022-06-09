@@ -14,6 +14,15 @@ class FixFormatStr(fixer_base.BaseFix):
               term< text=any '%' atom< '(' items=testlist_gexp ')' > >          
               """
 
+    # 一意なコード
+    CODE = 'ef004'
+
+    MESSAGE = 'f文字列を使え'
+
+    # WARNING
+    SEVERITY = 2
+
+
     def transform(self, node, results):
         text = results["text"]
         items = results["items"]
