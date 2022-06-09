@@ -446,9 +446,9 @@ class RefactoringTool(object):
                             new = fixer.transform(node, results)  # 修正ノードの作成
                             self.linter_messages.append(
                                 {
-                                    'lineStart': node.get_lineno(),
+                                    'lineStart': node.get_lineno()-1,  # 0始まりに変更
                                     'columnStart': node.get_columnno(),
-                                    'lineEnd': node.get_end_lineno(),
+                                    'lineEnd': node.get_end_lineno()-1,
                                     'columnEnd': node.get_end_columnno(),
                                     'code': fixer.CODE,
                                     'message': fixer.MESSAGE,
