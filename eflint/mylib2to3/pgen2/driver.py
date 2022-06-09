@@ -173,5 +173,6 @@ def main(*args):
         load_grammar(gt, save=True, force=True)
     return True
 
+
 if __name__ == "__main__":
     sys.exit(int(not main()))

@@ -1,5 +1,6 @@
 # Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006 Python Software Foundation.
 # All rights reserved.
+# flake8: noqa
 
 """Tokenization help for Python programs.
 
@@ -29,13 +30,14 @@ __author__ = 'Ka-Ping Yee <ping@lfw.org>'
 __credits__ = \
     'GvR, ESR, Tim Peters, Thomas Wouters, Fred Drake, Skip Montanaro'
 
-import string, re
+import string
+import re
 from codecs import BOM_UTF8, lookup
-from lib2to3.pgen2.token import *
+from .token import *
 
 from . import token
 __all__ = [x for x in dir(token) if x[0] != '_'] + ["tokenize",
-           "generate_tokens", "untokenize"]
+                                                    "generate_tokens", "untokenize"]
 del token
 
 try:
@@ -45,13 +47,17 @@ except NameError:
     # valid Python 3 code.
     bytes = str
 
+
 def group(*choices): return '(' + '|'.join(choices) + ')'
 def any(*choices): return group(*choices) + '*'
 def maybe(*choices): return group(*choices) + '?'
+
+
 def _combinations(*l):
     return set(
         x + y for x in l for y in l + ("",) if x.casefold() != y.casefold()
     )
+
 
 Whitespace = r'[ \f\t]*'
 Comment = r'#[^\r\n]*'
@@ -135,15 +141,21 @@ single_quoted = (
 
 tabsize = 8
 
-class TokenError(Exception): pass
 
-class StopTokenizing(Exception): pass
+class TokenError(Exception):
+    pass
 
-def printtoken(type, token, xxx_todo_changeme, xxx_todo_changeme1, line): # for testing
+
+class StopTokenizing(Exception):
+    pass
+
+
+def printtoken(type, token, xxx_todo_changeme, xxx_todo_changeme1, line):  # for testing
     (srow, scol) = xxx_todo_changeme
     (erow, ecol) = xxx_todo_changeme1
-    print("%d,%d-%d,%d:\t%s\t%s" % \
-        (srow, scol, erow, ecol, tok_name[type], repr(token)))
+    print("%d,%d-%d,%d:\t%s\t%s" %
+          (srow, scol, erow, ecol, tok_name[type], repr(token)))
+
 
 def tokenize(readline, tokeneater=printtoken):
     """
@@ -164,9 +176,12 @@ def tokenize(readline, tokeneater=printtoken):
         pass
 
 # backwards compatible interface
+
+
 def tokenize_loop(readline, tokeneater):
     for token_info in generate_tokens(readline):
         tokeneater(*token_info)
+
 
 class Untokenizer:
 
@@ -224,8 +239,10 @@ class Untokenizer:
                 startline = False
             toks_append(tokval)
 
+
 cookie_re = re.compile(r'^[ \t\f]*#.*?coding[:=][ \t]*([-\w.]+)', re.ASCII)
 blank_re = re.compile(br'^[ \t\f]*(?:[#\r\n]|$)', re.ASCII)
+
 
 def _get_normal_name(orig_enc):
     """Imitates get_normal_name in tokenizer.c."""
@@ -237,6 +254,7 @@ def _get_normal_name(orig_enc):
        enc.startswith(("latin-1-", "iso-8859-1-", "iso-latin-1-")):
         return "iso-8859-1"
     return orig_enc
+
 
 def detect_encoding(readline):
     """
@@ -259,6 +277,7 @@ def detect_encoding(readline):
     bom_found = False
     encoding = None
     default = 'utf-8'
+
     def read_or_stop():
         try:
             return readline()
@@ -311,6 +330,7 @@ def detect_encoding(readline):
 
     return default, [first, second]
 
+
 def untokenize(iterable):
     """Transform tokens back into Python source code.
 
@@ -331,6 +351,7 @@ def untokenize(iterable):
     """
     ut = Untokenizer()
     return ut.untokenize(iterable)
+
 
 def generate_tokens(readline):
     """
@@ -379,7 +400,7 @@ def generate_tokens(readline):
                 contline = None
             elif needcont and line[-2:] != '\\\n' and line[-3:] != '\\\r\n':
                 yield (ERRORTOKEN, contstr + line,
-                           strstart, (lnum, len(line)), contline)
+                       strstart, (lnum, len(line)), contline)
                 contstr = ''
                 contline = None
                 continue
@@ -389,15 +410,21 @@ def generate_tokens(readline):
                 continue
 
         elif parenlev == 0 and not continued:  # new statement
-            if not line: break
+            if not line:
+                break
             column = 0
             while pos < max:                   # measure leading whitespace
-                if line[pos] == ' ': column = column + 1
-                elif line[pos] == '\t': column = (column//tabsize + 1)*tabsize
-                elif line[pos] == '\f': column = 0
-                else: break
+                if line[pos] == ' ':
+                    column = column + 1
+                elif line[pos] == '\t':
+                    column = (column//tabsize + 1)*tabsize
+                elif line[pos] == '\f':
+                    column = 0
+                else:
+                    break
                 pos = pos + 1
-            if pos == max: break
+            if pos == max:
+                break
 
             if stashed:
                 yield stashed
@@ -486,8 +513,8 @@ def generate_tokens(readline):
                         contline = line
                         break
                 elif initial in single_quoted or \
-                    token[:2] in single_quoted or \
-                    token[:3] in single_quoted:
+                        token[:2] in single_quoted or \
+                        token[:3] in single_quoted:
                     if token[-1] == '\n':                  # continued string
                         strstart = (lnum, start)
                         endprog = (endprogs[initial] or endprogs[token[1]] or
@@ -539,15 +566,17 @@ def generate_tokens(readline):
                     yield (NL, token, spos, (lnum, pos), line)
                     continued = 1
                 else:
-                    if initial in '([{': parenlev = parenlev + 1
-                    elif initial in ')]}': parenlev = parenlev - 1
+                    if initial in '([{':
+                        parenlev = parenlev + 1
+                    elif initial in ')]}':
+                        parenlev = parenlev - 1
                     if stashed:
                         yield stashed
                         stashed = None
                     yield (OP, token, spos, epos, line)
             else:
                 yield (ERRORTOKEN, line[pos],
-                           (lnum, pos), (lnum, pos+1), line)
+                       (lnum, pos), (lnum, pos+1), line)
                 pos = pos + 1
 
     if stashed:
@@ -558,7 +587,10 @@ def generate_tokens(readline):
         yield (DEDENT, '', (lnum, 0), (lnum, 0), '')
     yield (ENDMARKER, '', (lnum, 0), (lnum, 0), '')
 
+
 if __name__ == '__main__':                     # testing
     import sys
-    if len(sys.argv) > 1: tokenize(open(sys.argv[1]).readline)
-    else: tokenize(sys.stdin.readline)
+    if len(sys.argv) > 1:
+        tokenize(open(sys.argv[1]).readline)
+    else:
+        tokenize(sys.stdin.readline)

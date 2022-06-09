@@ -471,7 +471,7 @@ class RefactoringTool(object):
                                 # the added code
                                 new_matches = self.BM.run(new.leaves())
                                 for fxr in new_matches:
-                                    if not fxr in match_set:
+                                    if fxr not in match_set:
                                         match_set[fxr] = []
 
                                     match_set[fxr].extend(new_matches[fxr])

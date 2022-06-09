@@ -1,6 +1,5 @@
 import argparse
 import json
-import sys
 
 from .mylib2to3.main import main as mylib
 

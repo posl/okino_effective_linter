@@ -3,13 +3,9 @@
 
 """Export the Python grammar and symbols."""
 
-# Python imports
 import os
 
-# Local imports
-from .pgen2 import token
 from .pgen2 import driver
-from . import pytree
 
 # The grammar file
 _GRAMMAR_FILE = os.path.join(os.path.dirname(__file__), "Grammar.txt")

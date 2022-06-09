@@ -9,22 +9,15 @@ class FixFormatStr(fixer_base.BaseFix):
 
     BM_compatible = True
 
-    # 他パターンの追加
     PATTERN = """
-              term< text=any '%' atom< '(' items=testlist_gexp ')' > >          
+              term< text=any '%' atom< '(' items=testlist_gexp ')' > >
               """
 
-    # 一意なコード
     CODE = 'ef004'
-
     MESSAGE = 'f文字列を使え'
-
-    # エラーレベル
     SEVERITY = 2
-
-    # 修正可能か
     CORRECTABLE = 1
-
+    DOCSURL = ''
 
     def transform(self, node, results):
         text = results["text"]
