@@ -271,4 +271,5 @@ def main(fixer_pkg, args=None):
         # rt.summarize()
 
     # Return error status (0 if rt.errors is zero)
-    return int(bool(rt.errors))
+    # return int(bool(rt.errors))
+    return rt.linter_messages

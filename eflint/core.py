@@ -2,6 +2,8 @@ import argparse
 import json
 import sys
 
+from mylib2to3.main import main as mylib
+
 parser = argparse.ArgumentParser(
     prog='eflint',
     usage='how to use',
@@ -12,7 +14,6 @@ parser.add_argument('--mock', action='store_true', help='return test json.')
 
 def main():
     args = parser.parse_args()
-    code = ''.join(sys.stdin.readlines())
 
     if args.mock:
         params = [
@@ -24,7 +25,7 @@ def main():
                         'lineEnd': 0,
                         'columnEnd': 5,
                         'code': 'ep000',
-                        'message': f'ごみコード（{code[0:5]}）です',
+                        'message': 'ごみコードです',
                         'severity': 2,
                         'source': 'eflint',
                         'correctable': 1,
@@ -45,5 +46,35 @@ def main():
             }
         ]
 
-        j = json.dumps(params, ensure_ascii=False)
-        print(j)
+    else:
+        messages = mylib('mylib2to3.fixes', ['--no-diffs', '-'])
+        params = [{"messages": []}]
+        for msg in messages:
+            params[0]["messages"].append(
+                {
+                    'lineStart': msg['lineStart'],
+                    'columnStart': msg['columnStart'],
+                    'lineEnd': msg['lineEnd'],
+                    'columnEnd': msg['columnEnd'],
+                    'code': msg['code'],
+                    'message': msg['message'],
+                    'severity': msg['severity'],
+                    'source': 'eflint',
+                    'correctable': msg['correctable'],
+                    'docsUrl': 'https://code.visualstudio.com/api',
+                    'inlineFix': {
+                        'replacement': msg['replacement'],
+                        'start': {
+                            'column': msg['columnStart'],
+                            'line': msg['lineStart']
+                        },
+                        'end': {
+                            'column': msg['columnEnd'],
+                            'line': msg['lineEnd']
+                        }
+                    }
+                }
+            )
+
+    j = json.dumps(params, ensure_ascii=False)
+    print(j)

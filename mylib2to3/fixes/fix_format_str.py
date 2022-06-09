@@ -19,8 +19,11 @@ class FixFormatStr(fixer_base.BaseFix):
 
     MESSAGE = 'f文字列を使え'
 
-    # WARNING
+    # エラーレベル
     SEVERITY = 2
+
+    # 修正可能か
+    CORRECTABLE = 1
 
 
     def transform(self, node, results):
