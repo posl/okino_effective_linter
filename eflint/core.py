@@ -2,7 +2,7 @@ import argparse
 import json
 import sys
 
-from mylib2to3.main import main as mylib
+from .mylib2to3.main import main as mylib
 
 parser = argparse.ArgumentParser(
     prog='eflint',
@@ -47,7 +47,7 @@ def main():
         ]
 
     else:
-        messages = mylib('mylib2to3.fixes', ['--no-diffs', '-'])
+        messages = mylib('eflint.mylib2to3.fixes', ['--no-diffs', '-'])
         params = [{"messages": []}]
         for msg in messages:
             params[0]["messages"].append(
