@@ -499,6 +499,19 @@ class RefactoringTool(object):
                 results = fixer.match(node)
                 if results:
                     new = fixer.transform(node, results)
+                    self.linter_messages.append(
+                        {
+                            'lineStart': node.get_lineno()-1,  # 0始まりに変更
+                            'columnStart': node.get_columnno(),
+                            'lineEnd': node.get_end_lineno()-1,
+                            'columnEnd': node.get_end_columnno(),
+                            'code': fixer.CODE,
+                            'message': fixer.MESSAGE,
+                            'severity': fixer.SEVERITY,
+                            'correctable': fixer.CORRECTABLE,
+                            'replacement': str(new),
+                        }
+                    )
                     if new is not None:
                         node.replace(new)
                         node = new
