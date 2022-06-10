@@ -23,13 +23,13 @@ class FixFormatStr(fixer_base.BaseFix):
         text = results["text"]
         items = results["items"]
 
-        new_text = text.value[1:-1]
-        quote = text.value[0]
+        new_text = text.value
         args = [child.value for child in items.children if child.value != ',']
 
-        for arg in args:
-            new_text, _ = re.subn(r'%\w', f'{{{arg}}}', new_text, count=1)
-            # パディング(%10d)，リテラル（'test'），エスケープ（%%d）
+        repattern = re.compile(r'([^%])%\w')
 
-        new_stmt = String(f'f{quote}{new_text}{quote}', prefix=node.prefix)
+        for arg in args:
+            new_text, _ = repattern.subn(f'\\1{{{arg}}}', new_text, count=1)
+
+        new_stmt = String(f'f{new_text}', prefix=node.prefix)
         return new_stmt
