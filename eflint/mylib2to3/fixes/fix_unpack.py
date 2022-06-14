@@ -1,12 +1,14 @@
 """Fixer match test."""
 
 from .. import fixer_base
+from ..refactor import MessageContainer  # 移動したい
 
 
 class FixUnpack(fixer_base.BaseFix):
 
     # bmでない = リピート*+[]を含む？要検証 多分計算量が多い
 
+    # 今の実装のままだと全体にマッチしてしまうため，ファイル全体に下線を引いてしまう，要修正
     # '\n'などを含む場合はr文字列にする必要あり
     PATTERN = r"""
         any<
@@ -24,7 +26,19 @@ class FixUnpack(fixer_base.BaseFix):
     DOCSURL = ''
 
     def transform(self, node, results):
-        return None
+        msg = MessageContainer(
+            node.get_lineno()-1,
+            node.get_columnno(),
+            node.get_end_lineno()-1,
+            node.get_end_columnno(),
+            self.CODE,
+            self.MESSAGE,
+            self.SEVERITY,
+            self.CORRECTABLE,
+            None
+        )
+
+        return None, msg
 
     def match(self, node):
         r = super(FixUnpack, self).match(node)

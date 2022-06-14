@@ -1,6 +1,7 @@
 """Fixer match test."""
 
 from .. import fixer_base
+from ..refactor import MessageContainer  # 移動したい
 
 
 class FixMatchTest(fixer_base.BaseFix):
@@ -49,4 +50,16 @@ class FixMatchTest(fixer_base.BaseFix):
     DOCSURL = ''
 
     def transform(self, node, results):
-        return None
+        msg = MessageContainer(
+            node.get_lineno()-1,
+            node.get_columnno(),
+            node.get_end_lineno()-1,
+            node.get_end_columnno(),
+            self.CODE,
+            self.MESSAGE,
+            self.SEVERITY,
+            self.CORRECTABLE,
+            None
+        )
+
+        return None, msg

@@ -1,8 +1,10 @@
 """Fixer for format string"""
 
 import re
+
 from .. import fixer_base
 from ..fixer_util import String
+from ..refactor import MessageContainer  # 移動したい
 
 
 class FixFormatStr(fixer_base.BaseFix):
@@ -32,4 +34,17 @@ class FixFormatStr(fixer_base.BaseFix):
             new_text, _ = repattern.subn(f'\\1{{{arg}}}', new_text, count=1)
 
         new_stmt = String(f'f{new_text}', prefix=node.prefix)
-        return new_stmt
+
+        msg = MessageContainer(
+            node.get_lineno()-1,
+            node.get_columnno(),
+            node.get_end_lineno()-1,
+            node.get_end_columnno(),
+            self.CODE,
+            self.MESSAGE,
+            self.SEVERITY,
+            self.CORRECTABLE,
+            str(new_stmt)
+        )
+
+        return new_stmt, msg

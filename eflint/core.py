@@ -18,25 +18,25 @@ def main():
     for msg in messages:
         params[0]["messages"].append(
             {
-                'lineStart': msg['lineStart'],
-                'columnStart': msg['columnStart'],
-                'lineEnd': msg['lineEnd'],
-                'columnEnd': msg['columnEnd'],
-                'code': msg['code'],
-                'message': msg['message'],
-                'severity': msg['severity'],
+                'lineStart': msg.line_start,
+                'columnStart': msg.column_start,
+                'lineEnd': msg.line_end,
+                'columnEnd': msg.column_end,
+                'code': msg.code,
+                'message': msg.message,
+                'severity': msg.severity,
                 'source': 'eflint',
-                'correctable': msg['correctable'],
+                'correctable': msg.correctable,
                 'docsUrl': 'https://code.visualstudio.com/api',
                 'inlineFix': {
-                    'replacement': msg['replacement'],
+                    'replacement': msg.replacement,
                     'start': {
-                        'column': msg['columnStart'],
-                        'line': msg['lineStart']
+                        'column': msg.column_start,
+                        'line': msg.line_start
                     },
                     'end': {
-                        'column': msg['columnEnd'],
-                        'line': msg['lineEnd']
+                        'column': msg.column_end,
+                        'line': msg.line_end
                     }
                 }
             }

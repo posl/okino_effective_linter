@@ -20,6 +20,8 @@ import logging
 import operator
 import collections
 from itertools import chain
+from typing import NamedTuple
+
 
 # Local imports
 from .pgen2 import driver, tokenize, token
@@ -42,6 +44,18 @@ def get_all_fix_names(fixer_pkg, remove_prefix=True):
 
 class _EveryNode(Exception):
     pass
+
+
+class MessageContainer(NamedTuple):
+    line_start: int
+    column_start: int
+    line_end: int
+    column_end: int
+    code: str
+    message: str
+    severity: int
+    correctable: int
+    replacement: int
 
 
 def _get_head_types(pat):
@@ -443,20 +457,8 @@ class RefactoringTool(object):
                         results = fixer.match(node)
 
                         if results:
-                            new = fixer.transform(node, results)  # 修正ノードの作成
-                            self.linter_messages.append(
-                                {
-                                    'lineStart': node.get_lineno()-1,  # 0始まりに変更
-                                    'columnStart': node.get_columnno(),
-                                    'lineEnd': node.get_end_lineno()-1,
-                                    'columnEnd': node.get_end_columnno(),
-                                    'code': fixer.CODE,
-                                    'message': fixer.MESSAGE,
-                                    'severity': fixer.SEVERITY,
-                                    'correctable': fixer.CORRECTABLE,
-                                    'replacement': str(new),
-                                }
-                            )
+                            new, msg = fixer.transform(node, results)  # 修正ノードの作成
+                            self.linter_messages.append(msg)  # 出力するメッセージ
                             if new is not None:
                                 node.replace(new)  # 置き換え
                                 # new.fixers_applied.append(fixer)
@@ -498,20 +500,8 @@ class RefactoringTool(object):
             for fixer in fixers[node.type]:
                 results = fixer.match(node)
                 if results:
-                    new = fixer.transform(node, results)
-                    self.linter_messages.append(
-                        {
-                            'lineStart': node.get_lineno()-1,  # 0始まりに変更
-                            'columnStart': node.get_columnno(),
-                            'lineEnd': node.get_end_lineno()-1,
-                            'columnEnd': node.get_end_columnno(),
-                            'code': fixer.CODE,
-                            'message': fixer.MESSAGE,
-                            'severity': fixer.SEVERITY,
-                            'correctable': fixer.CORRECTABLE,
-                            'replacement': str(new),
-                        }
-                    )
+                    new, msg = fixer.transform(node, results)
+                    self.linter_messages.append(msg)
                     if new is not None:
                         node.replace(new)
                         node = new
