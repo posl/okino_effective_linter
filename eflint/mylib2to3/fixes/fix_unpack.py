@@ -13,8 +13,8 @@ class FixUnpack(fixer_base.BaseFix):
     PATTERN = r"""
         any<
             any*
-            simple_stmt< expr_stmt< any '=' power< id1=any trailer< '[' any ']' > > > '\n' >
-            simple_stmt< expr_stmt< any '=' power< id2=any trailer< '[' any ']' > > > '\n' >
+            stmt1=simple_stmt< expr_stmt< any '=' power< id1=any trailer< '[' any ']' > > > '\n' >
+            stmt2=simple_stmt< expr_stmt< any '=' power< id2=any trailer< '[' any ']' > > > '\n' >
             next = any*
         >
     """
@@ -27,10 +27,10 @@ class FixUnpack(fixer_base.BaseFix):
 
     def transform(self, node, results):
         msg = MessageContainer(
-            node.get_lineno()-1,
-            node.get_columnno(),
-            node.get_end_lineno()-1,
-            node.get_end_columnno(),
+            results['stmt1'].get_lineno()-1,
+            results['stmt1'].get_columnno(),
+            results['stmt2'].get_end_lineno()-1,
+            results['stmt2'].get_end_columnno(),
             self.CODE,
             self.MESSAGE,
             self.SEVERITY,
