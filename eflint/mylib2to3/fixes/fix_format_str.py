@@ -25,13 +25,43 @@ class FixFormatStr(fixer_base.BaseFix):
         text = results["text"]
         items = results["items"]
 
+        text_quote = text.value[0]
         new_text = text.value
-        args = [child.value for child in items.children if child.value != ',']
-
-        repattern = re.compile(r'([^%])%\w')
+        args = [str(child).strip() for child in items.children if str(child) != ',']
+        repattern = re.compile(r'([^%])%([+ ]?)(-?)(\d*)(\.?\d*)(\w)')
 
         for arg in args:
-            new_text, _ = repattern.subn(f'\\1{{{arg}}}', new_text, count=1)
+            # クオートの種類が被らないように切り替える
+            if arg[0] == text_quote:
+                arg = self.switch_quotes(arg)
+
+            m = repattern.search(new_text)
+            colon = ''
+            esc, sign, left, pad, cat, form = m.groups()
+
+            if sign or pad or cat:
+                colon = ':'
+
+            # padding
+            # Cフォーマット
+            # 「-」なしのパディングでは，種類によらず右寄せになる
+            #
+            # f文字列
+            # 「<>」なしのパディングでは，文字列は左寄せ，数値は右寄せになる
+            if pad:
+                if form == 's':
+                    pad = ('' if left == '-' else '>') + pad
+                else:
+                    pad = ('<' if left == '-' else '') + pad
+
+            # repr, asciiの変換 （strはデフォルトで変換されるので不要？）
+            if form in 'ra':
+                form = '!' + form
+            # signがあるときはformを残す必要がある
+            elif not sign:
+                form = ''
+
+            new_text, _ = repattern.subn(f'{esc}{{{arg}{colon}{sign}{pad}{cat}{form}}}', new_text, count=1)
 
         new_stmt = String(f'f{new_text}', prefix=node.prefix)
 
@@ -48,3 +78,10 @@ class FixFormatStr(fixer_base.BaseFix):
         )
 
         return new_stmt, msg
+
+    def switch_quotes(self, text):
+        if text[0] == "'":
+            return '"' + text[1:-1] + '"'
+        if text[0] == '"':
+            return "'" + text[1:-1] + "'"
+        return text
