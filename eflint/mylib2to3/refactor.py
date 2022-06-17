@@ -458,8 +458,9 @@ class RefactoringTool(object):
 
                         if results:
                             new, msg = fixer.transform(node, results)  # 修正ノードの作成
-                            if new is not None and msg is not None:
+                            if msg is not None:
                                 self.linter_messages.append(msg)  # 出力するメッセージ
+                            if new is not None and msg is not None:
                                 node.replace(new)  # 置き換え
                                 # new.fixers_applied.append(fixer)
                                 for node in new.post_order():
@@ -502,7 +503,8 @@ class RefactoringTool(object):
                 results = fixer.match(node)
                 if results:
                     new, msg = fixer.transform(node, results)
-                    self.linter_messages.append(msg)
+                    if msg is not None:
+                        self.linter_messages.append(msg)
                     if new is not None:
                         node.replace(new)
                         node = new
