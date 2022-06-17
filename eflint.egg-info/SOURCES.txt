@@ -20,6 +20,7 @@ eflint/mylib2to3/refactor.py
 eflint/mylib2to3/fixes/fix_else_after_for.py
 eflint/mylib2to3/fixes/fix_format_str.py
 eflint/mylib2to3/fixes/fix_match_test.py
+eflint/mylib2to3/fixes/fix_range.py
 eflint/mylib2to3/fixes/fix_unpack.py
 eflint/mylib2to3/pgen2/__init__.py
 eflint/mylib2to3/pgen2/driver.py
