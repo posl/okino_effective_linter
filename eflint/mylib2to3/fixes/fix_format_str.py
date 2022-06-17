@@ -3,7 +3,7 @@
 import re
 
 from .. import fixer_base
-from ..fixer_util import String
+from ..fixer_util import String, is_string
 from ..refactor import MessageContainer  # 移動したい
 
 
@@ -37,7 +37,10 @@ class FixFormatStr(fixer_base.BaseFix):
 
             m = repattern.search(new_text)
             colon = ''
-            esc, sign, left, pad, cat, form = m.groups()
+            try:
+                esc, sign, left, pad, cat, form = m.groups()
+            except AttributeError:
+                return None, None
 
             if sign or pad or cat:
                 colon = ':'
@@ -85,3 +88,11 @@ class FixFormatStr(fixer_base.BaseFix):
         if text[0] == '"':
             return "'" + text[1:-1] + "'"
         return text
+
+    def match(self, node):
+        r = super(FixFormatStr, self).match(node)
+        if r:
+            if is_string(r["text"]):
+                return r
+            return None
+        return r

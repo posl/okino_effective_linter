@@ -195,6 +195,10 @@ def is_list(node):
             and node.children[-1].value == "]")
 
 
+def is_string(node):
+    return (isinstance(node, Leaf) and node.type == token.STRING)
+
+
 ###########################################################
 # Misc
 ###########################################################
