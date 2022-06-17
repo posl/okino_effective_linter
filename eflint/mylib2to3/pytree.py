@@ -148,6 +148,10 @@ class Base(object):
             if not node.children:
                 return
             node = node.children[-1]
+            # 空行をカウントしないようにする
+            if isinstance(node, Leaf) and node.value == '' and node.prev_sibling:
+                node = node.prev_sibling
+
         return node.lineno
 
     def get_end_columnno(self):
@@ -156,6 +160,10 @@ class Base(object):
             if not node.children:
                 return
             node = node.children[-1]
+            # 空行をカウントしないようにする
+            if isinstance(node, Leaf) and node.value == '' and node.prev_sibling:
+                node = node.prev_sibling
+
         return node.column + len(node.value)
 
     def changed(self):

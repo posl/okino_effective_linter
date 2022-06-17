@@ -471,12 +471,13 @@ class RefactoringTool(object):
 
                                 # update the original match set for
                                 # the added code
-                                new_matches = self.BM.run(new.leaves())
-                                for fxr in new_matches:
-                                    if fxr not in match_set:
-                                        match_set[fxr] = []
+                                # リンターは逐次修正しないので不要（むしろしてはいけない）と思われる
+                                # new_matches = self.BM.run(new.leaves())
+                                # for fxr in new_matches:
+                                #    if fxr not in match_set:
+                                #        match_set[fxr] = []
 
-                                    match_set[fxr].extend(new_matches[fxr])
+                                #    match_set[fxr].extend(new_matches[fxr])
 
         for fixer in chain(self.pre_order, self.post_order):
             fixer.finish_tree(tree, name)
