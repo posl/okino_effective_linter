@@ -4,7 +4,7 @@ from .. import fixer_base
 from ..refactor import MessageContainer  # 移動したい
 
 
-class FixRange(fixer_base.BaseFix):
+class FixEnumerate(fixer_base.BaseFix):
 
     BM_compatible = True
 
