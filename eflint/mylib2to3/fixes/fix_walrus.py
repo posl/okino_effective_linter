@@ -25,6 +25,8 @@ class FixWalrus(fixer_base.BaseFix):
 
     def transform(self, node, results):
 
+        # ifブロック内で使われていて，ifより外で使用されていない，という条件があってもいいかも
+
         for leaf in results["ids"].leaves():
             if leaf.value == results["id1"].value:
                 # 子ノードが存在するならカッコをつける
