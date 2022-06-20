@@ -73,6 +73,23 @@ def Call(func_name, args=None, prefix=None):
     return node
 
 
+def Walrus(left, right, prefix=None):
+    wal = Node(syms.namedexpr_test, [Leaf(token.COLONEQUAL, ":=", prefix=prefix)])
+    wal.insert_child(0, left)
+    wal.insert_child(2, right)
+    if prefix is not None:
+        wal.prefix = prefix
+    return wal
+
+
+def Parens(node, prefix=None):
+    atom = Node(syms.atom, [LParen(), RParen()])
+    atom.insert_child(1, node)
+    if prefix is not None:
+        atom.prefix = prefix
+    return atom
+
+
 def Newline():
     """A newline literal"""
     return Leaf(token.NEWLINE, "\n")
