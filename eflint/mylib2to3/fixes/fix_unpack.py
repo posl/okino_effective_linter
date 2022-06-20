@@ -9,12 +9,16 @@ class FixUnpack(fixer_base.BaseFix):
     # bmでない = リピート*+[]を含む？要検証 多分計算量が多い
 
     # '\n'などを含む場合はr文字列にする必要あり
+    # 最小マッチングなので足りない
+    # 要改善
     PATTERN = r"""
         any<
             any*
             stmt1=simple_stmt< expr_stmt< any '=' power< id1=any trailer< '[' any ']' > > > '\n' >
+            (simple_stmt< expr_stmt< any '=' power< any trailer< '[' any ']' > > > '\n' >)*
             stmt2=simple_stmt< expr_stmt< any '=' power< id2=any trailer< '[' any ']' > > > '\n' >
-            next = any*
+            (not simple_stmt< expr_stmt '\n' >)
+            any*
         >
     """
 

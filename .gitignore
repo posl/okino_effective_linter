@@ -6,3 +6,4 @@ test_debug.py
 *.pickle
 lib2to3.md
 *.log
+fix_match_test.py

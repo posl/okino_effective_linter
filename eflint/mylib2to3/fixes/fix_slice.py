@@ -7,6 +7,8 @@ from ..refactor import MessageContainer
 
 class FixSlice(fixer_base.BaseFix):
 
+    BM_compatible = True
+
     PATTERN = """
         power< any trailer< '[' subscript< any ':' any sliceop< ':' any > > ']' > >
     """
