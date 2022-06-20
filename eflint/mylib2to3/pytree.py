@@ -142,27 +142,29 @@ class Base(object):
             node = node.children[0]
         return node.column
 
-    def get_end_lineno(self):
+    def get_end_lineno(self, is_logical=False):
         node = self
         while not isinstance(node, Leaf):
             if not node.children:
                 return
             node = node.children[-1]
-            # 空行をカウントしないようにする
-            if isinstance(node, Leaf) and node.value == '' and node.prev_sibling:
-                node = node.prev_sibling
+            # 空行や後ろのコメント行をカウントしないようにする
+            if is_logical:
+                if isinstance(node, Leaf) and node.value == '' and node.prev_sibling:
+                    node = node.prev_sibling
 
         return node.lineno
 
-    def get_end_columnno(self):
+    def get_end_columnno(self, is_logical=False):
         node = self
         while not isinstance(node, Leaf):
             if not node.children:
                 return
             node = node.children[-1]
-            # 空行をカウントしないようにする
-            if isinstance(node, Leaf) and node.value == '' and node.prev_sibling:
-                node = node.prev_sibling
+            # 空行や後ろのコメント行をカウントしないようにする
+            if is_logical:
+                if isinstance(node, Leaf) and node.value == '' and node.prev_sibling:
+                    node = node.prev_sibling
 
         return node.column + len(node.value)
 

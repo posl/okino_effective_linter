@@ -49,6 +49,8 @@ class _EveryNode(Exception):
 class MessageContainer(NamedTuple):
     line_start: int
     column_start: int
+    line_logical_end: int
+    column_logical_end: int
     line_end: int
     column_end: int
     code: str

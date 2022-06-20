@@ -13,7 +13,7 @@ class FixWalrus(fixer_base.BaseFix):
             any*
             stmt1=simple_stmt< expr_stmt< id1=any '=' id2=any > '\n' >
             stmt2=if_stmt< 'if' ids=any ':' suite >
-            any*
+            next=any*
         >
     """
 
@@ -41,6 +41,8 @@ class FixWalrus(fixer_base.BaseFix):
         msg = MessageContainer(
             results["stmt1"].get_lineno()-1,
             results["stmt1"].get_columnno(),
+            results["stmt2"].get_end_lineno(is_logical=True)-1,
+            results["stmt2"].get_end_columnno(is_logical=True),
             results["stmt2"].get_end_lineno()-1,
             results["stmt2"].get_end_columnno(),
             self.CODE,

@@ -19,8 +19,8 @@ def main():
         linter_msg = {
             'lineStart': msg.line_start,
             'columnStart': msg.column_start,
-            'lineEnd': msg.line_end,
-            'columnEnd': msg.column_end,
+            'lineEnd': msg.line_logical_end,
+            'columnEnd': msg.column_logical_end,
             'code': msg.code,
             'message': msg.message,
             'severity': msg.severity,

@@ -71,6 +71,8 @@ class FixFormatStr(fixer_base.BaseFix):
         msg = MessageContainer(
             node.get_lineno()-1,
             node.get_columnno(),
+            node.get_end_lineno(is_logical=True)-1,
+            node.get_end_columnno(is_logical=True),
             node.get_end_lineno()-1,
             node.get_end_columnno(),
             self.CODE,

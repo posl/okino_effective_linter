@@ -28,6 +28,8 @@ class FixUnpack(fixer_base.BaseFix):
         msg = MessageContainer(
             results['stmt1'].get_lineno()-1,
             results['stmt1'].get_columnno(),
+            results['stmt2'].get_end_lineno(is_logical=True)-1,
+            results['stmt2'].get_end_columnno(is_logical=True),
             results['stmt2'].get_end_lineno()-1,
             results['stmt2'].get_end_columnno(),
             self.CODE,
