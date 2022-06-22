@@ -390,6 +390,7 @@ class RefactoringTool(object):
 
     def refactor_stdin(self, doctests_only=False):
         input = sys.stdin.read()
+        input += "\n"  # Silence certain parse errors
         if doctests_only:
             self.log_debug("Refactoring doctests in stdin")
             output = self.refactor_docstring(input, "<stdin>")
