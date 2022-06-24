@@ -220,6 +220,14 @@ def is_string(node):
     return (isinstance(node, Leaf) and node.type == token.STRING)
 
 
+def is_comp_for(node):
+    return (isinstance(node, Node) and node.type == syms.comp_for)
+
+
+def is_comp_if(node):
+    return (isinstance(node, Node) and node.type == syms.comp_if)
+
+
 ###########################################################
 # Misc
 ###########################################################
