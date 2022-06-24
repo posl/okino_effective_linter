@@ -15,7 +15,7 @@ class FixToListComp(fixer_base.BaseFix):
             any*
             stmt0=simple_stmt< expr_stmt< new_it0=any '=' atom< '[' ']' > > any >
             stmt1=for_stmt< 'for' fp=any 'in' it=any ':'
-                suite< '\n' '    '
+                suite< '\n' any
                     simple_stmt< power< new_it1=any trailer< '.' 'append' > trailer< '(' xp=any ')' > > '\n' > any
                 >
             >
@@ -37,7 +37,7 @@ class FixToListComp(fixer_base.BaseFix):
 
         list_comp = ListComp(xp, fp, it)
         new = Assign(new_it, list_comp)
-        msg = build_message(self, results["stmt0"], results["stmt1"], replacement=str(new))
+        msg = build_message(self, results['stmt0'], results['stmt1'], replacement=str(new))
 
         return None, msg
 
