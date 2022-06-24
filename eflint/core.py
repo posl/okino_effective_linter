@@ -37,8 +37,8 @@ def main():
                     'line': msg.line_start
                 },
                 'end': {
-                    'column': msg.column_end,
-                    'line': msg.line_end
+                    'column': msg.column_logical_end,
+                    'line': msg.line_logical_end
                 }
             }
 

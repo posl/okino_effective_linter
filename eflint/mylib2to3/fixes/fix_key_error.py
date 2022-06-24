@@ -2,7 +2,7 @@
 
 
 from .. import fixer_base
-from ..fixer_util import Assign, Name, Call, Attr, Comma, SimpleStmt
+from ..fixer_util import Assign, Name, Call, Attr, Comma
 from ..msg_container import build_message
 
 
@@ -46,8 +46,7 @@ class FixKeyError(fixer_base.BaseFix):
 
         get = Call(Name('get'), args=[key, Comma(), val])
         attr = Attr(_dict, get)
-        ass = Assign(_id, attr)
-        new = SimpleStmt(ass)
+        new = Assign(_id, attr)
 
         msg = build_message(self, node, replacement=str(new))
 

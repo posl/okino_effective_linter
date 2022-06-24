@@ -40,6 +40,9 @@ class FixToWalrus(fixer_base.BaseFix):
                 break
 
         results["stmt1"].remove()
+        # suiteの最後の空行のコメントを無視する
+        # ちょっと強引なので直したい
+        results["stmt2"].children[-1].children[-1].prefix = ''
         msg = build_message(self, results["stmt1"], results["stmt2"], replacement=str(results["stmt2"]))
 
         return None, msg
