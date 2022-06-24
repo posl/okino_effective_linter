@@ -6,7 +6,7 @@ from ..fixer_util import Walrus, Parens
 from ..msg_container import build_message
 
 
-class FixWalrus(fixer_base.BaseFix):
+class FixToWalrus(fixer_base.BaseFix):
 
     PATTERN = r"""
         any<
@@ -45,7 +45,7 @@ class FixWalrus(fixer_base.BaseFix):
         return None, msg
 
     def match(self, node):
-        r = super(FixWalrus, self).match(node)
+        r = super(FixToWalrus, self).match(node)
         if r:
             values = [v.value for v in r["ids"].leaves()]
             if r["id1"].value in values:

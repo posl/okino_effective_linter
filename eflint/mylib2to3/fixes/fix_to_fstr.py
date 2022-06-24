@@ -7,7 +7,7 @@ from ..fixer_util import String, is_string
 from ..msg_container import build_message
 
 
-class FixFormatStr(fixer_base.BaseFix):
+class FixToFstr(fixer_base.BaseFix):
 
     BM_compatible = True
 
@@ -79,7 +79,7 @@ class FixFormatStr(fixer_base.BaseFix):
         return text
 
     def match(self, node):
-        r = super(FixFormatStr, self).match(node)
+        r = super(FixToFstr, self).match(node)
         if r:
             if is_string(r["text"]):
                 return r
