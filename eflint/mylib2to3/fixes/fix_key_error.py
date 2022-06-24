@@ -3,7 +3,7 @@
 
 from .. import fixer_base
 from ..fixer_util import Assign, Name, Call, Attr, Comma, SimpleStmt
-from ..refactor import MessageContainer
+from ..msg_container import build_message
 
 
 class FixKeyError(fixer_base.BaseFix):
@@ -13,14 +13,18 @@ class FixKeyError(fixer_base.BaseFix):
     PATTERN = r"""
         if0=if_stmt<
             'if' comparison< key0=any 'in' dict0=any > ':'
-            suite< any any simple_stmt< expr_stmt< id0=any '=' power< dict1=any trailer< '[' key1=any ']' > > > any > any >
+            suite< any any
+                simple_stmt< expr_stmt< id0=any '=' power< dict1=any trailer< '[' key1=any ']' > > > any > any
+            >
             'else' ':'
             suite< any any simple_stmt< expr_stmt< id1=any '=' val0=any > any > any >
         >
         |
         try0=try_stmt<
             'try' ':'
-            suite< any any simple_stmt< expr_stmt< id0=any '=' power< dict0=any trailer< '[' key0=any ']' > > > any > any >
+            suite< any any
+                simple_stmt< expr_stmt< id0=any '=' power< dict0=any trailer< '[' key0=any ']' > > > any > any
+            >
             except_clause ':'
             suite< any any simple_stmt< expr_stmt< id1=any '=' val0=any > any > any >
         >
@@ -45,19 +49,7 @@ class FixKeyError(fixer_base.BaseFix):
         ass = Assign(_id, attr)
         new = SimpleStmt(ass)
 
-        msg = MessageContainer(
-            node.get_lineno()-1,
-            node.get_columnno(),
-            node.get_end_lineno(is_logical=True)-1,
-            node.get_end_columnno(is_logical=True),
-            node.get_end_lineno()-1,
-            node.get_end_columnno(),
-            self.CODE,
-            self.MESSAGE,
-            self.SEVERITY,
-            self.CORRECTABLE,
-            str(new)
-        )
+        msg = build_message(self, node, replacement=str(new))
 
         return new, msg
 

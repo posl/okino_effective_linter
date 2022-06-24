@@ -1,7 +1,7 @@
 """Fixer match test."""
 
 from .. import fixer_base
-from ..refactor import MessageContainer  # 移動したい
+from ..msg_container import build_message
 
 
 class FixUnpack(fixer_base.BaseFix):
@@ -29,19 +29,7 @@ class FixUnpack(fixer_base.BaseFix):
     DOCSURL = ''
 
     def transform(self, node, results):
-        msg = MessageContainer(
-            results['stmt1'].get_lineno()-1,
-            results['stmt1'].get_columnno(),
-            results['stmt2'].get_end_lineno(is_logical=True)-1,
-            results['stmt2'].get_end_columnno(is_logical=True),
-            results['stmt2'].get_end_lineno()-1,
-            results['stmt2'].get_end_columnno(),
-            self.CODE,
-            self.MESSAGE,
-            self.SEVERITY,
-            self.CORRECTABLE,
-            None
-        )
+        msg = build_message(self, results['stmt1'], results['stmt2'])
 
         return None, msg
 

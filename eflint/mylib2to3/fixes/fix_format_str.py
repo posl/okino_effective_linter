@@ -4,7 +4,7 @@ import re
 
 from .. import fixer_base
 from ..fixer_util import String, is_string
-from ..refactor import MessageContainer  # 移動したい
+from ..msg_container import build_message
 
 
 class FixFormatStr(fixer_base.BaseFix):
@@ -67,20 +67,7 @@ class FixFormatStr(fixer_base.BaseFix):
             new_text, _ = repattern.subn(f'{esc}{{{arg}{colon}{sign}{pad}{cat}{form}}}', new_text, count=1)
 
         new_stmt = String(f'f{new_text}', prefix=node.prefix)
-
-        msg = MessageContainer(
-            node.get_lineno()-1,
-            node.get_columnno(),
-            node.get_end_lineno(is_logical=True)-1,
-            node.get_end_columnno(is_logical=True),
-            node.get_end_lineno()-1,
-            node.get_end_columnno(),
-            self.CODE,
-            self.MESSAGE,
-            self.SEVERITY,
-            self.CORRECTABLE,
-            str(new_stmt)
-        )
+        msg = build_message(self, node, replacement=str(new_stmt))
 
         return new_stmt, msg
 

@@ -1,7 +1,7 @@
 """Fixer match test."""
 
 from .. import fixer_base
-from ..refactor import MessageContainer  # 移動したい
+from ..msg_container import build_message
 
 
 class FixReturns(fixer_base.BaseFix):
@@ -19,19 +19,7 @@ class FixReturns(fixer_base.BaseFix):
     DOCSURL = ''
 
     def transform(self, node, results):
-        msg = MessageContainer(
-            node.get_lineno()-1,
-            node.get_columnno(),
-            node.get_end_lineno(is_logical=True)-1,
-            node.get_end_columnno(is_logical=True),
-            node.get_end_lineno()-1,
-            node.get_end_columnno(),
-            self.CODE,
-            self.MESSAGE,
-            self.SEVERITY,
-            self.CORRECTABLE,
-            None
-        )
+        msg = build_message(self, node)
 
         return None, msg
 

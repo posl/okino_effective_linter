@@ -3,7 +3,7 @@
 
 from .. import fixer_base
 from ..fixer_util import Walrus, Parens
-from ..refactor import MessageContainer
+from ..msg_container import build_message
 
 
 class FixWalrus(fixer_base.BaseFix):
@@ -26,6 +26,7 @@ class FixWalrus(fixer_base.BaseFix):
     def transform(self, node, results):
 
         # ifブロック内で使われていて，ifより外で使用されていない，という条件があってもいいかも
+        # 置き換えるのはコピーしてから，要修正
 
         for leaf in results["ids"].leaves():
             if leaf.value == results["id1"].value:
@@ -39,20 +40,7 @@ class FixWalrus(fixer_base.BaseFix):
                 break
 
         results["stmt1"].remove()
-
-        msg = MessageContainer(
-            results["stmt1"].get_lineno()-1,
-            results["stmt1"].get_columnno(),
-            results["stmt2"].get_end_lineno(is_logical=True)-1,
-            results["stmt2"].get_end_columnno(is_logical=True),
-            results["stmt2"].get_end_lineno()-1,
-            results["stmt2"].get_end_columnno(),
-            self.CODE,
-            self.MESSAGE,
-            self.SEVERITY,
-            self.CORRECTABLE,
-            str(results["stmt2"])
-        )
+        msg = build_message(self, results["stmt1"], results["stmt2"], replacement=str(results["stmt2"]))
 
         return None, msg
 

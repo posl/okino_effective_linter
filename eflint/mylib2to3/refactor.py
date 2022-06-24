@@ -20,7 +20,6 @@ import logging
 import operator
 import collections
 from itertools import chain
-from typing import NamedTuple
 
 
 # Local imports
@@ -44,20 +43,6 @@ def get_all_fix_names(fixer_pkg, remove_prefix=True):
 
 class _EveryNode(Exception):
     pass
-
-
-class MessageContainer(NamedTuple):
-    line_start: int
-    column_start: int
-    line_logical_end: int
-    column_logical_end: int
-    line_end: int
-    column_end: int
-    code: str
-    message: str
-    severity: int
-    correctable: int
-    replacement: int
 
 
 def _get_head_types(pat):
