@@ -1,5 +1,7 @@
 import argparse
 import json
+import subprocess
+import sys
 
 from .mylib2to3.main import main as mylib
 
@@ -12,10 +14,14 @@ parser = argparse.ArgumentParser(
 
 def main():
     # args = parser.parse_args()
-
-    messages = mylib('eflint.mylib2to3.fixes', ['--no-diffs', '-'])
     params = [{"messages": []}]
-    for msg in messages:
+    code = sys.stdin.read()
+
+    # lib2to3
+    # TODO: 標準入力で渡す方法を考える or 出力をjson形式にしてコマンドから実行する
+    lib2to3_msgs = mylib('eflint.mylib2to3.fixes', ['--no-diffs', '-'])
+
+    for msg in lib2to3_msgs:
         linter_msg = {
             'lineStart': msg.line_start,
             'columnStart': msg.column_start,
@@ -44,5 +50,32 @@ def main():
 
         params[0]["messages"].append(linter_msg)
 
-    j = json.dumps(params, ensure_ascii=False)
-    print(j)
+    # pylint
+    with subprocess.Popen(["echo", code], stdout=subprocess.PIPE) as pipe:
+        pylint_output = subprocess.run(
+            ["pylint", "--from-stdin", "stdin", "-f", "json"],
+            stdin=pipe.stdout,
+            capture_output=True,
+            text=True,
+            check=False,
+        ).stdout
+    pylint_msgs = json.loads(pylint_output)
+
+    for msg in pylint_msgs:
+        linter_msg = {
+            'lineStart': msg['line'],
+            'columnStart': msg['column'],
+            'lineEnd': msg['endLine'],
+            'columnEnd': msg['endColumn'],
+            'code': msg['message-id'],
+            'message': msg['message'] + '<eflint>',
+            'severity': 2,
+            'source': 'eflint',
+            'correctable': 0,
+            'docsUrl': 'https://code.visualstudio.com/api'
+        }
+
+        params[0]["messages"].append(linter_msg)
+
+    result = json.dumps(params, ensure_ascii=False)
+    print(result)
