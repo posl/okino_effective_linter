@@ -17,9 +17,12 @@ def main():
     params = [{"messages": []}]
     code = sys.stdin.read()
 
-    # lib2to3
-    # TODO: 標準入力で渡す方法を考える or 出力をjson形式にしてコマンドから実行する
-    lib2to3_msgs = mylib('eflint.mylib2to3.fixes', ['--no-diffs', '-'])
+    # mylib
+    lib2to3_msgs = mylib(
+        fixer_pkg='eflint.mylib2to3.fixes',
+        code=code,
+        args=['--no-diffs', '-']
+        )
 
     for msg in lib2to3_msgs:
         linter_msg = {
@@ -63,10 +66,10 @@ def main():
 
     for msg in pylint_msgs:
         linter_msg = {
-            'lineStart': msg['line'],
+            'lineStart': msg['line']-1,
             'columnStart': msg['column'],
-            'lineEnd': msg['endLine'],
-            'columnEnd': msg['endColumn'],
+            'lineEnd': msg['endLine'] or msg['line']-1,
+            'columnEnd': msg['endColumn'] or msg['column']+1,
             'code': msg['message-id'],
             'message': msg['message'] + '<eflint>',
             'severity': 2,

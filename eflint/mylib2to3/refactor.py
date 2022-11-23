@@ -389,6 +389,22 @@ class RefactoringTool(object):
                 self.processed_file(str(tree), "<stdin>", input)
             else:
                 self.log_debug("No changes in stdin")
+    
+    def refactor_code(self, code, doctests_only=False):
+        input = code + '\n'
+        if doctests_only:
+            self.log_debug("Refactoring doctests in stdin")
+            output = self.refactor_docstring(input, "<stdin>")
+            if self.write_unchanged_files or output != input:
+                self.processed_file(output, "<stdin>", input)
+            else:
+                self.log_debug("No doctest changes in stdin")
+        else:
+            tree = self.refactor_string(input, "<stdin>")
+            if self.write_unchanged_files or (tree and tree.was_changed):
+                self.processed_file(str(tree), "<stdin>", input)
+            else:
+                self.log_debug("No changes in stdin")
 
     def refactor_tree(self, tree, name):
         """Refactors a parse tree (modifying the tree in place).

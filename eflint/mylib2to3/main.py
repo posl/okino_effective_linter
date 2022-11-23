@@ -132,7 +132,7 @@ def warn(msg):
     print("WARNING: %s" % (msg,), file=sys.stderr)
 
 
-def main(fixer_pkg, args=None):
+def main(fixer_pkg, code=None, args=None):
     """Main program.
 
     Args:
@@ -258,7 +258,9 @@ def main(fixer_pkg, args=None):
 
     # Refactor all files and directories passed as arguments
     if not rt.errors:
-        if refactor_stdin:
+        if code:
+            rt.refactor_code(code)
+        elif refactor_stdin:
             rt.refactor_stdin()
         else:
             try:
@@ -271,6 +273,4 @@ def main(fixer_pkg, args=None):
                 return 1
         # rt.summarize()
 
-    # Return error status (0 if rt.errors is zero)
-    # return int(bool(rt.errors))
     return rt.linter_messages
