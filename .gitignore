@@ -1,9 +1,9 @@
 0ld
 __pycache__
 test.ipynb
-test_fix.py
-test_debug.py
+test.py
+sample.py
+sample_small.py
 *.pickle
 lib2to3.md
 *.log
-fix_match_test.py
