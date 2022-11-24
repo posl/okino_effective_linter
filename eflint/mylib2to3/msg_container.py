@@ -38,7 +38,7 @@ def build_message(
 
     end_node = end_node or start_node
     code = code or fixer.CODE
-    message = textwrap.dedent(message or fixer.MESSAGE)
+    message = textwrap.dedent(message or fixer.MESSAGE).strip()
     severity = severity if severity is not None else fixer.SEVERITY
     correctable = correctable if correctable is not None else fixer.CORRECTABLE
 

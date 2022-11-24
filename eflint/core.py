@@ -7,7 +7,7 @@ import sys
 import textwrap
 
 from .mylib2to3.main import main as mylib
-from .pylint_addition import MESSAGE
+from .pylint_addition import DATAS
 
 parser = argparse.ArgumentParser(
     prog="eflint",
@@ -62,20 +62,20 @@ def main():
         ).stdout
     pylint_msgs = json.loads(pylint_output)
 
-    # TODO: severtyの上書きを行う？
+    # TODO: lib2to3とかぶってるやつは表示しないようにする
     for msg in pylint_msgs:
+        data = DATAS.get(msg["message-id"], {})
         linter_msg = {
             "lineStart": msg["line"] - 1,
             "columnStart": msg["column"],
             "lineEnd": msg["endLine"] or msg["line"] - 1,
             "columnEnd": msg["endColumn"] or msg["column"] + 1,
             "code": f'{msg["message-id"]}:{msg["symbol"]}',
-            "message": msg["message"]
-            + textwrap.dedent(MESSAGE.get(msg["message-id"], "")),
-            "severity": 2,
+            "message": msg["message"] + textwrap.dedent(data.get("message", "")),
+            "severity": data.get("severity", 1),
             "source": "eflint",
             "correctable": 0,
-            "docsUrl": "https://code.visualstudio.com/api",
+            "docsUrl": data.get("url", "https://pylint.pycqa.org/en/latest/index.html"),
         }
 
         params[0]["messages"].append(linter_msg)
