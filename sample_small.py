@@ -2,3 +2,9 @@
 
 # ef004: to_fstr
 print('%f %s %s' % (x, str(x), ' y'))
+
+def a():
+    pass
+
+def a():
+    pass

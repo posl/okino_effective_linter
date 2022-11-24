@@ -1,54 +1,52 @@
+"""eflintのメインプログラム"""
+
 import argparse
 import json
 import subprocess
 import sys
+import textwrap
 
 from .mylib2to3.main import main as mylib
+from .pylint_addition import MESSAGE
 
 parser = argparse.ArgumentParser(
-    prog='eflint',
-    usage='how to use',
-    description='linter for effective python.',
+    prog="eflint",
+    usage="how to use",
+    description="linter for effective python.",
 )
 
 
 def main():
+    """lib2to3とpylintを実行し，出力を整形する"""
+
     # args = parser.parse_args()
     params = [{"messages": []}]
     code = sys.stdin.read()
 
     # mylib
     lib2to3_msgs = mylib(
-        fixer_pkg='eflint.mylib2to3.fixes',
-        code=code,
-        args=['--no-diffs', '-']
-        )
+        fixer_pkg="eflint.mylib2to3.fixes", code=code, args=["--no-diffs", "-"]
+    )
 
     for msg in lib2to3_msgs:
         linter_msg = {
-            'lineStart': msg.line_start,
-            'columnStart': msg.column_start,
-            'lineEnd': msg.line_logical_end,
-            'columnEnd': msg.column_logical_end,
-            'code': msg.code,
-            'message': msg.message,
-            'severity': msg.severity,
-            'source': 'eflint',
-            'correctable': msg.correctable,
-            'docsUrl': 'https://code.visualstudio.com/api'
+            "lineStart": msg.line_start,
+            "columnStart": msg.column_start,
+            "lineEnd": msg.line_logical_end,
+            "columnEnd": msg.column_logical_end,
+            "code": msg.code,
+            "message": msg.message,
+            "severity": msg.severity,
+            "source": "eflint",
+            "correctable": msg.correctable,
+            "docsUrl": "https://code.visualstudio.com/api",
         }
 
         if msg.correctable:
             linter_msg["inlineFix"] = {
-                'replacement': msg.replacement,
-                'start': {
-                    'column': msg.column_start,
-                    'line': msg.line_start
-                },
-                'end': {
-                    'column': msg.column_logical_end,
-                    'line': msg.line_logical_end
-                }
+                "replacement": msg.replacement,
+                "start": {"column": msg.column_start, "line": msg.line_start},
+                "end": {"column": msg.column_logical_end, "line": msg.line_logical_end},
             }
 
         params[0]["messages"].append(linter_msg)
@@ -64,18 +62,20 @@ def main():
         ).stdout
     pylint_msgs = json.loads(pylint_output)
 
+    # TODO: severtyの上書きを行う？
     for msg in pylint_msgs:
         linter_msg = {
-            'lineStart': msg['line']-1,
-            'columnStart': msg['column'],
-            'lineEnd': msg['endLine'] or msg['line']-1,
-            'columnEnd': msg['endColumn'] or msg['column']+1,
-            'code': msg['message-id'],
-            'message': msg['message'] + '<eflint>',
-            'severity': 2,
-            'source': 'eflint',
-            'correctable': 0,
-            'docsUrl': 'https://code.visualstudio.com/api'
+            "lineStart": msg["line"] - 1,
+            "columnStart": msg["column"],
+            "lineEnd": msg["endLine"] or msg["line"] - 1,
+            "columnEnd": msg["endColumn"] or msg["column"] + 1,
+            "code": f'{msg["message-id"]}:{msg["symbol"]}',
+            "message": msg["message"]
+            + textwrap.dedent(MESSAGE.get(msg["message-id"], "")),
+            "severity": 2,
+            "source": "eflint",
+            "correctable": 0,
+            "docsUrl": "https://code.visualstudio.com/api",
         }
 
         params[0]["messages"].append(linter_msg)
