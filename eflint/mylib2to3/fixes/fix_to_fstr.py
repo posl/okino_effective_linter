@@ -16,7 +16,16 @@ class FixToFstr(fixer_base.BaseFix):
               """
 
     CODE = 'ef004'
-    MESSAGE = 'f文字列を使え'
+    MESSAGE = """
+    f文字列を使え
+
+    理由
+    - コードが長く，可読性が落ちる
+    - 変数の型を間違えやすい
+
+    修正案
+    {}
+    """
     SEVERITY = 2
     CORRECTABLE = 1
     DOCSURL = ''
@@ -67,7 +76,7 @@ class FixToFstr(fixer_base.BaseFix):
             new_text, _ = repattern.subn(f'{esc}{{{arg}{colon}{sign}{pad}{cat}{form}}}', new_text, count=1)
 
         new_stmt = String(f'f{new_text}', prefix=node.prefix)
-        msg = build_message(self, node, replacement=str(new_stmt))
+        msg = build_message(self, node, message=self.MESSAGE.format(str(new_stmt)), replacement=str(new_stmt))
 
         return new_stmt, msg
 
