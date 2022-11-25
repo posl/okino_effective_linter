@@ -7,7 +7,7 @@ import sys
 import textwrap
 
 from .mylib2to3.main import main as mylib
-from .pylint_addition import DATAS
+from .pylint_addition import URL, DATAS
 
 parser = argparse.ArgumentParser(
     prog="eflint",
@@ -64,21 +64,21 @@ def main():
 
     # TODO: lib2to3とかぶってるやつは表示しないようにする
     for msg in pylint_msgs:
-        data = DATAS.get(msg["message-id"], {})
-        linter_msg = {
-            "lineStart": msg["line"] - 1,
-            "columnStart": msg["column"],
-            "lineEnd": msg["endLine"] or msg["line"] - 1,
-            "columnEnd": msg["endColumn"] or msg["column"] + 1,
-            "code": f'{msg["message-id"]}:{msg["symbol"]}',
-            "message": msg["message"] + textwrap.dedent(data.get("message", "")),
-            "severity": data.get("severity", 1),
-            "source": "eflint",
-            "correctable": 0,
-            "docsUrl": data.get("url", "https://pylint.pycqa.org/en/latest/index.html"),
-        }
+        if data := DATAS.get(msg["message-id"]):
+            linter_msg = {
+                "lineStart": msg["line"] - 1,
+                "columnStart": msg["column"],
+                "lineEnd": msg["endLine"] or msg["line"] - 1,
+                "columnEnd": msg["endColumn"] or msg["column"] + 1,
+                "code": f'{msg["message-id"]}:{msg["symbol"]}',
+                "message": msg["message"] + textwrap.dedent(data.get("message", "")),
+                "severity": data.get("severity", 1),
+                "source": "eflint",
+                "correctable": 0,
+                "docsUrl": URL.format(msg["type"], msg["symbol"]),
+            }
 
-        params[0]["messages"].append(linter_msg)
+            params[0]["messages"].append(linter_msg)
 
     result = json.dumps(params, ensure_ascii=False)
     print(result)
