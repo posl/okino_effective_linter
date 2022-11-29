@@ -76,7 +76,7 @@ class FixToFstr(fixer_base.BaseFix):
             new_text, _ = repattern.subn(f'{esc}{{{arg}{colon}{sign}{pad}{cat}{form}}}', new_text, count=1)
 
         new_stmt = String(f'f{new_text}', prefix=node.prefix)
-        msg = build_message(self, node, message=self.MESSAGE.format(str(new_stmt)), replacement=str(new_stmt))
+        msg = build_message(self, node, message=self.MESSAGE.format(str(new_stmt)), replacement=new_stmt)
 
         return new_stmt, msg
 

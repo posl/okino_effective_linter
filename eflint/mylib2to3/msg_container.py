@@ -32,7 +32,7 @@ def build_message(
     message: str = None,
     severity: int = None,
     correctable: int = None,
-    replacement: str = None
+    replacement: Base = None
 ) -> MessageContainer:
     """整形したメッセージを構築する"""
 
@@ -41,6 +41,7 @@ def build_message(
     message = textwrap.dedent(message or fixer.MESSAGE).strip()
     severity = severity if severity is not None else fixer.SEVERITY
     correctable = correctable if correctable is not None else fixer.CORRECTABLE
+    replacement = str(replacement)
 
     msg = MessageContainer(
         start_node.get_lineno() - 1,

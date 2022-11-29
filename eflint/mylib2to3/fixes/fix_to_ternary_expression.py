@@ -46,8 +46,8 @@ class FixToTernaryExpression(fixer_base.BaseFix):
         test = Test(true_val, condition, false_val)
         new = Assign(target, test)
 
-        msg = build_message(self, node, replacement=str(new))
-        return node, msg
+        msg = build_message(self, node, replacement=new)
+        return new, msg
 
     def match(self, node):
         r = super().match(node)

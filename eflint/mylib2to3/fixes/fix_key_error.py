@@ -67,7 +67,7 @@ class FixKeyError(fixer_base.BaseFix):
         attr = Attr(_dict, get)
         new = Assign(_id, attr)
 
-        msg = build_message(self, node, replacement=str(new))
+        msg = build_message(self, node, replacement=new)
 
         return new, msg
 
