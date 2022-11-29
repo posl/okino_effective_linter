@@ -104,6 +104,20 @@ def Number(n, prefix=None):
     return Leaf(token.NUMBER, n, prefix=prefix)
 
 
+def Test(true_val, condition, false_val):
+    true_val.prefix = ''
+    condition.prefix = ' '
+    false_val.prefix = ' '
+
+    return Node(syms.test, [
+        true_val,
+        Name('if', prefix=' '),
+        condition,
+        Name('else', prefix=' '),
+        false_val
+    ])
+
+
 def Subscript(index_node):
     """A numeric or string subscript"""
     return Node(syms.trailer, [Leaf(token.LBRACE, "["),
