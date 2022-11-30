@@ -120,6 +120,7 @@ def Test(true_val, condition, false_val):
 
 def Subscript(index_node):
     """A numeric or string subscript"""
+    # BRACEで生成しているがSQBの間違いだと思われる
     return Node(syms.trailer, [Leaf(token.LBRACE, "["),
                                index_node,
                                Leaf(token.RBRACE, "]")])
@@ -136,8 +137,13 @@ def SimpleStmt(node):
 
 def EmptyList():
     return Node(syms.atom,
-                [Leaf(token.LBRACE, "["),
-                 Leaf(token.RBRACE, "]")])
+                [Leaf(token.LSQB, "["),
+                 Leaf(token.RSQB, "]")])
+
+def EmptyDict():
+    return Node(syms.atom,
+                [Leaf(token.LBRACE, "{"),
+                 Leaf(token.RBRACE, "}")])
 
 
 def ListComp(xp, fp, it, test=None):
@@ -159,6 +165,7 @@ def ListComp(xp, fp, it, test=None):
         if_leaf.prefix = " "
         inner_args.append(Node(syms.comp_if, [if_leaf, test]))
     inner = Node(syms.listmaker, [xp, Node(syms.comp_for, inner_args)])
+    # BRACEで生成しているがSQBの間違いだと思われる
     return Node(syms.atom,
                 [Leaf(token.LBRACE, "["),
                  inner,
