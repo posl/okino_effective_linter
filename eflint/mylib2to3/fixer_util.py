@@ -90,6 +90,12 @@ def Parens(node, prefix=None):
     return atom
 
 
+def Return(node):
+    return Node(syms.return_stmt,
+                [Name('return'),
+                 node])
+
+
 def Newline():
     """A newline literal"""
     return Leaf(token.NEWLINE, "\n")
