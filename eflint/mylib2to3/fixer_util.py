@@ -134,6 +134,12 @@ def SimpleStmt(node):
     return Node(syms.simple_stmt, [node, Newline()])
 
 
+def EmptyList():
+    return Node(syms.atom,
+                [Leaf(token.LBRACE, "["),
+                 Leaf(token.RBRACE, "]")])
+
+
 def ListComp(xp, fp, it, test=None):
     """A list comprehension of the form [xp for fp in it if test].
 
