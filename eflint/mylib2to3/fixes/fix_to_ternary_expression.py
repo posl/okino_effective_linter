@@ -22,12 +22,13 @@ class FixToTernaryExpression(fixer_base.BaseFix):
 
     BM_compatible = True
 
+    # TODO: anyで誤魔化している改行や空白をなんとかする
     PATTERN = r"""
     if_stmt<
         'if' bool=any ':'
-            suite< any* simple_stmt< expr_stmt< id0=any '=' val0=any > any > any >
+            suite< any any simple_stmt< expr_stmt< id0=any '=' val0=any > any > any >
         'else' ':'
-            suite< any* simple_stmt< expr_stmt< id1=any '=' val1=any > any > any >
+            suite< any any simple_stmt< expr_stmt< id1=any '=' val1=any > any > any >
     >
     """
 
@@ -51,6 +52,6 @@ class FixToTernaryExpression(fixer_base.BaseFix):
 
     def match(self, node):
         r = super().match(node)
-        if r["id0"] == r["id1"]:
+        if r and r["id0"] == r["id1"]:
             return r
         return None
