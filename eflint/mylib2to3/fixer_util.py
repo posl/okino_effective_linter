@@ -158,6 +158,9 @@ def EmptyDict():
                 [Leaf(token.LBRACE, "{"),
                  Leaf(token.RBRACE, "}")])
 
+def Except(exception):
+    return Node(syms.except_clause, [Name('except'), exception])
+
 
 def ListComp(xp, fp, it, test=None):
     """A list comprehension of the form [xp for fp in it if test].
