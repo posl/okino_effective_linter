@@ -90,10 +90,18 @@ def Parens(node, prefix=None):
     return atom
 
 
-def If(condition, node, else_node=None):
+def Elif(condition, node):
+    return [Name('elif'), condition, Leaf(token.COLON, ":"), node]
+
+
+def Else(node):
+    return [Name('else', Leaf(token.COLON, ":")), node]
+
+
+def If(condition, node, else_nodes=None):
     leaves = [Name('if'), condition, Leaf(token.COLON, ":"), node]
-    if else_node:
-        leaves += [Name('else', Leaf(token.COLON, ":")), else_node]
+    if else_nodes:
+        leaves += else_nodes
     return Node(syms.if_stmt, leaves)
 
 
@@ -385,6 +393,20 @@ def find_indentation(node):
                 return indent.value
         node = node.parent
     return ""
+
+
+def dedent(node):
+    if node.type == syms.suite and len(node.children) > 2:
+        indent = node.children[1]
+        if indent.type == token.INDENT and len(indent.value) >= 4:
+            indent.value = indent.value[4:]
+        for child in node.children[3:]:
+            if len(child.prefix) >= 4 and child.prefix[:4] == '    ':
+                child.prefix = child.prefix[4:]
+
+    for child in node.children:
+        dedent(child)
+
 
 ###########################################################
 # The following functions are to find bindings in a suite
