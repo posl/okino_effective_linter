@@ -464,15 +464,15 @@ class RefactoringTool(object):
                             new, msg = fixer.transform(node, results)  # 修正ノードの作成
                             if msg is not None:
                                 self.linter_messages.append(msg)  # 出力するメッセージ
-                            if new is not None and msg is not None:
-                                node.replace(new)  # 置き換え
+                            # if new is not None and msg is not None:
+                                # node.replace(new)  # 置き換え
                                 # new.fixers_applied.append(fixer)
-                                for node in new.post_order():
+                                # for node in new.post_order():
                                     # do not apply the fixer again to
                                     # this or any subnode
-                                    if not node.fixers_applied:
-                                        node.fixers_applied = []
-                                    node.fixers_applied.append(fixer)
+                                    # if not node.fixers_applied:
+                                        # node.fixers_applied = []
+                                    # node.fixers_applied.append(fixer)
 
                                 # update the original match set for
                                 # the added code
