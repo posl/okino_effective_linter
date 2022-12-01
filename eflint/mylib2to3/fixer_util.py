@@ -90,6 +90,13 @@ def Parens(node, prefix=None):
     return atom
 
 
+def If(condition, node, else_node=None):
+    leaves = [Name('if'), condition, Leaf(token.COLON, ":"), node]
+    if else_node:
+        leaves += [Name('else', Leaf(token.COLON, ":")), else_node]
+    return Node(syms.if_stmt, leaves)
+
+
 def Return(node):
     return Node(syms.return_stmt,
                 [Name('return'),
