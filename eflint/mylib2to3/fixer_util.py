@@ -103,6 +103,10 @@ def Return(node):
                  node])
 
 
+def Comparison(left, op, right):
+    return Node(syms.comparison, [left, op, right])
+
+
 def Newline():
     """A newline literal"""
     return Leaf(token.NEWLINE, "\n")
@@ -257,6 +261,10 @@ def is_list(node):
             and isinstance(node.children[-1], Leaf)
             and node.children[0].value == "["
             and node.children[-1].value == "]")
+
+
+def is_number(node):
+    return (isinstance(node, Leaf) and node.type == token.NUMBER)
 
 
 def is_string(node):
