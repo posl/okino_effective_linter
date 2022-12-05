@@ -73,10 +73,8 @@ def Call(func_name, args=None, prefix=None):
     return node
 
 
-def Walrus(left, right, prefix=None):
-    wal = Node(syms.namedexpr_test, [Leaf(token.COLONEQUAL, ":=", prefix=prefix)])
-    wal.insert_child(0, left)
-    wal.insert_child(2, right)
+def Walrus(target, assign, prefix=None):
+    wal = Node(syms.namedexpr_test, [target, Leaf(token.COLONEQUAL, ":=", prefix=' '), assign])
     if prefix is not None:
         wal.prefix = prefix
     return wal
