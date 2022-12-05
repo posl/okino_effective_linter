@@ -3,14 +3,14 @@
 * Change
 
     if x > 1:
-        return x
+        break
     else:
         x = 2
 
 into
 
     if x > 1:
-        return x
+        break x
     x = 2
 """
 
@@ -20,21 +20,21 @@ from ..fixer_util import If, dedent
 from ..msg_container import build_message
 
 
-class FixNoElseReturn(fixer_base.BaseFix):
+class FixNoElseBreak(fixer_base.BaseFix):
 
     BM_compatible = True
 
-    # TODO: elseの行が空行で残る問題の修正
+    # TODO: elseの行が空白行として残る問題の修正
     PATTERN = r"""
     if_stmt<
         'if' condition=any ':'
-            if_suite=suite< '\n' any simple_stmt< return_stmt< 'return' any > '\n' > any >
+            if_suite=suite< '\n' any simple_stmt< 'break' '\n' > any >
         'else' ':'
             else_suite=any
     >
     """
 
-    CODE = 'R1705'
+    CODE = 'R1723'
     MESSAGE = '不要なelseを削除する'
     SEVERITY = 2
     CORRECTABLE = 1
