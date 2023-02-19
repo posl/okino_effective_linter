@@ -14,14 +14,25 @@ parser = argparse.ArgumentParser(
     usage="how to use",
     description="linter for effective python.",
 )
+parser.add_argument('path', nargs='?', default=None, help='path to program. If not set, --stdin is required.')
+parser.add_argument('--stdin', action='store_true', help='receive code from stdin.')
 
 
 def main():
     """lib2to3とpylintを実行し，出力を整形する"""
 
-    # args = parser.parse_args()
+    args = parser.parse_args()
+    if args.path:
+        with open(args.path, mode='r', encoding='utf_8') as file:
+            code = file.read()
+    if args.stdin:
+        code = sys.stdin.read()
+    
+    # pylintの呼び出しの際に末尾の空白行が1つ増える問題の回避策
+    if code[-1] == '\n':
+        code = code[:-1]
+
     params = [{"messages": []}]
-    code = sys.stdin.read()
 
     ##########
     # mylib
@@ -73,8 +84,8 @@ def main():
             linter_msg = {
                 "lineStart": msg["line"] - 1,
                 "columnStart": msg["column"],
-                "lineEnd": msg["endLine"] - 1 or msg["line"] - 1,
-                "columnEnd": msg["endColumn"] or msg["column"] + 1,
+                "lineEnd": (msg["endLine"] or msg["line"]) - 1,
+                "columnEnd": msg["endColumn"] or (msg["column"] + 1),
                 "code": f'{msg["message-id"]}:{msg["symbol"]}',
                 "message": msg["message"] + textwrap.dedent(data.get("message", "")),
                 "severity": type2severity.get(msg["type"], 1),
