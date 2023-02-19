@@ -17,12 +17,6 @@ class FixToFstr(fixer_base.BaseFix):
 
     CODE = 'ef004'
     MESSAGE = """
-    f文字列を使え
-
-    理由
-    - コードが長く，可読性が落ちる
-    - 変数の型を間違えやすい
-
     修正案
     {}
     """
