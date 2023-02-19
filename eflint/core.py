@@ -23,7 +23,9 @@ def main():
     params = [{"messages": []}]
     code = sys.stdin.read()
 
+    ##########
     # mylib
+    ##########
     lib2to3_msgs = mylib(
         fixer_pkg="eflint.mylib2to3.fixes", code=code, args=["--no-diffs", "-"]
     )
@@ -51,7 +53,9 @@ def main():
 
         params[0]["messages"].append(linter_msg)
 
+    ##########
     # pylint
+    ##########
     with subprocess.Popen(["echo", code], stdout=subprocess.PIPE) as pipe:
         pylint_output = subprocess.run(
             ["pylint", "--from-stdin", "stdin", "-f", "json"],
@@ -62,17 +66,19 @@ def main():
         ).stdout
     pylint_msgs = json.loads(pylint_output)
 
-    # TODO: lib2to3とかぶってるやつは表示しないようにする
+    type2severity = {'error': 3, 'warning': 2, 'convention': 1, 'refactor': 1}
+
     for msg in pylint_msgs:
         if data := DATAS.get(msg["message-id"]):
             linter_msg = {
                 "lineStart": msg["line"] - 1,
                 "columnStart": msg["column"],
-                "lineEnd": msg["endLine"] or msg["line"] - 1,
+                "lineEnd": msg["endLine"] - 1 or msg["line"] - 1,
                 "columnEnd": msg["endColumn"] or msg["column"] + 1,
                 "code": f'{msg["message-id"]}:{msg["symbol"]}',
                 "message": msg["message"] + textwrap.dedent(data.get("message", "")),
-                "severity": data.get("severity", 1),
+                "severity": type2severity.get(msg["type"], 1),
+                "priority": data.get("priority", type2severity.get(msg["type"], 1)),
                 "source": "eflint",
                 "correctable": 0,
                 "docsUrl": URL.format(msg["type"], msg["symbol"]),
