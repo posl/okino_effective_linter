@@ -72,7 +72,7 @@ class FixKeyError(fixer_base.BaseFix):
         return new, msg
 
     def match(self, node):
-        r = super(FixKeyError, self).match(node)
+        r = super().match(node)
         if r and 'if0' in r:
             if r['dict0'] == r['dict1'] and r['key0'] == r['key1'] and r['id0'] == r['id1']:
                 return r

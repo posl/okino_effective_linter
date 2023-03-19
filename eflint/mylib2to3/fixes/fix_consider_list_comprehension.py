@@ -54,7 +54,7 @@ class FixConsiderListComprehension(fixer_base.BaseFix):
         return None, msg
 
     def match(self, node):
-        r = super(FixToListComp, self).match(node)
+        r = super().match(node)
         if r:
             if r['new_it0'] == r['new_it1']:
                 return r

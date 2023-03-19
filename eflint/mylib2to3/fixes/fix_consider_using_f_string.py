@@ -80,7 +80,7 @@ class FixConsiderUsingFString(fixer_base.BaseFix):
         return text
 
     def match(self, node):
-        r = super(FixToFstr, self).match(node)
+        r = super().match(node)
         if r:
             if is_string(r["text"]):
                 return r
