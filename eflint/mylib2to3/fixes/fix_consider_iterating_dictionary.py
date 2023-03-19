@@ -13,11 +13,10 @@ into
 
 
 from .. import fixer_base
-from ..fixer_util import Test, Assign
 from ..msg_container import build_message
 
 
-class FixToIteratingDict(fixer_base.BaseFix):
+class FixConsiderIteratingDictionary(fixer_base.BaseFix):
 
     BM_compatible = True
 
@@ -28,7 +27,7 @@ class FixToIteratingDict(fixer_base.BaseFix):
     """
 
     CODE = 'C0201'
-    MESSAGE = '辞書はそのままイテレートできる'
+    MESSAGE = ''
     SEVERITY = 2
     CORRECTABLE = 1
     DOCSURL = ''

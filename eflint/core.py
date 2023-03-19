@@ -27,42 +27,12 @@ def main():
             code = file.read()
     if args.stdin:
         code = sys.stdin.read()
-    
+
     # pylintの呼び出しの際に末尾の空白行が1つ増える問題の回避策
     if code[-1] == '\n':
         code = code[:-1]
 
     params = [{"messages": []}]
-
-    ##########
-    # mylib
-    ##########
-    lib2to3_msgs = mylib(
-        fixer_pkg="eflint.mylib2to3.fixes", code=code, args=["--no-diffs", "-"]
-    )
-
-    for msg in lib2to3_msgs:
-        linter_msg = {
-            "lineStart": msg.line_start,
-            "columnStart": msg.column_start,
-            "lineEnd": msg.line_logical_end,
-            "columnEnd": msg.column_logical_end,
-            "code": msg.code,
-            "message": msg.message,
-            "severity": msg.severity,
-            "source": "eflint",
-            "correctable": msg.correctable,
-            "docsUrl": "https://code.visualstudio.com/api",
-        }
-
-        if msg.correctable:
-            linter_msg["inlineFix"] = {
-                "replacement": msg.replacement,
-                "start": {"column": msg.column_start, "line": msg.line_start},
-                "end": {"column": msg.column_logical_end, "line": msg.line_logical_end},
-            }
-
-        params[0]["messages"].append(linter_msg)
 
     ##########
     # pylint
@@ -96,6 +66,38 @@ def main():
             }
 
             params[0]["messages"].append(linter_msg)
+
+    ##########
+    # mylib
+    ##########
+    lib2to3_msgs = mylib(
+        fixer_pkg="eflint.mylib2to3.fixes", code=code, args=["--no-diffs", "-"]
+    )
+
+    # ドキュメントURLは現状特にないので仮置き
+    for msg in lib2to3_msgs:
+        linter_msg = {
+            "lineStart": msg.line_start,
+            "columnStart": msg.column_start,
+            "lineEnd": msg.line_logical_end,
+            "columnEnd": msg.column_logical_end,
+            "code": msg.code,
+            "message": msg.message,
+            "severity": msg.severity,
+            "priority": msg.severity,
+            "source": "eflint",
+            "correctable": msg.correctable,
+            "docsUrl": "https://pylint.pycqa.org/en/latest/user_guide/messages/messages_overview.html",
+        }
+
+        if msg.correctable:
+            linter_msg["inlineFix"] = {
+                "replacement": msg.replacement,
+                "start": {"column": msg.column_start, "line": msg.line_start},
+                "end": {"column": msg.column_logical_end, "line": msg.line_logical_end},
+            }
+
+        params[0]["messages"].append(linter_msg)
 
     result = json.dumps(params, ensure_ascii=False)
     print(result)

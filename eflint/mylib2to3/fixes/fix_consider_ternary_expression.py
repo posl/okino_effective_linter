@@ -18,7 +18,7 @@ from ..fixer_util import Test, Assign
 from ..msg_container import build_message
 
 
-class FixToTernaryExpression(fixer_base.BaseFix):
+class FixConsiderTernaryExpression(fixer_base.BaseFix):
 
     BM_compatible = True
 
@@ -32,8 +32,8 @@ class FixToTernaryExpression(fixer_base.BaseFix):
     >
     """
 
-    CODE = 'w0160'
-    MESSAGE = '三項演算子を使え'
+    CODE = 'W0160'
+    MESSAGE = ''
     SEVERITY = 2
     CORRECTABLE = 1
     DOCSURL = ''

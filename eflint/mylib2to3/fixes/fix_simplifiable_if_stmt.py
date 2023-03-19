@@ -32,7 +32,7 @@ class FixSimplifiableIfStmt(fixer_base.BaseFix):
     """
 
     CODE = 'R1703'
-    MESSAGE = '冗長な条件式を簡単にする'
+    MESSAGE = ''
     SEVERITY = 2
     CORRECTABLE = 1
     DOCSURL = ''

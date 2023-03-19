@@ -1,36 +1,36 @@
-"""空の辞書の初期化を簡単な記法に変換する
+"""空のリストの初期化を簡単な記法に変換する
 
 * Change
 
-    x = dict()
+    x = list()
 
 into
 
-    x = {}
+    x = []
 """
 
 
 from .. import fixer_base
-from ..fixer_util import EmptyDict
+from ..fixer_util import EmptyList
 from ..msg_container import build_message
 
 
-class FixDictLiteral(fixer_base.BaseFix):
+class FixUseListLiteral(fixer_base.BaseFix):
 
     BM_compatible = True
 
     PATTERN = r"""
-    power< 'dict' trailer< '(' ')' > >
+    power< 'list' trailer< '(' ')' > >
     """
 
-    CODE = 'R1735'
-    MESSAGE = '空の辞書の初期化を簡単な記法にする'
+    CODE = 'R1734'
+    MESSAGE = ''
     SEVERITY = 2
     CORRECTABLE = 1
     DOCSURL = ''
 
     def transform(self, node, results):
-        new = EmptyDict()
+        new = EmptyList()
         msg = build_message(self, node, replacement=new)
         return node, msg
 

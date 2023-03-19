@@ -25,7 +25,6 @@ class FixNoElseReturn(fixer_base.BaseFix):
     BM_compatible = True
 
     # TODO: elseの行が空行で残る問題の修正
-    # TODO: R1703のパターンもひっかかる問題の修正
     PATTERN = r"""
     if_stmt<
         'if' condition=any ':'
@@ -36,7 +35,7 @@ class FixNoElseReturn(fixer_base.BaseFix):
     """
 
     CODE = 'R1705'
-    MESSAGE = '不要なelseを削除する'
+    MESSAGE = ''
     SEVERITY = 2
     CORRECTABLE = 1
     DOCSURL = ''

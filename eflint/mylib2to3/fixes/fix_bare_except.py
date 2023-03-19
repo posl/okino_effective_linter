@@ -35,7 +35,7 @@ class FixBareExcept(fixer_base.BaseFix):
     """
 
     CODE = 'W0702'
-    MESSAGE = '単体のexceptを使用するな'
+    MESSAGE = ''
     SEVERITY = 2
     CORRECTABLE = 1
     DOCSURL = ''

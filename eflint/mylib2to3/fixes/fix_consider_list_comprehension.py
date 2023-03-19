@@ -17,7 +17,7 @@ from ..msg_container import build_message
 from ..fixer_util import ListComp, Assign
 
 
-class FixToListComp(fixer_base.BaseFix):
+class FixConsiderListComprehension(fixer_base.BaseFix):
 
     BM_compatible = False
 
@@ -35,8 +35,8 @@ class FixToListComp(fixer_base.BaseFix):
         >
     """
 
-    CODE = 'ef027'
-    MESSAGE = 'リスト内包表記を使え'
+    CODE = 'X0003'
+    MESSAGE = 'リスト内包表記を使うと，より簡潔にリストを作成することができます．'
     SEVERITY = 3
     CORRECTABLE = 1
     DOCSURL = ''
@@ -49,7 +49,7 @@ class FixToListComp(fixer_base.BaseFix):
 
         list_comp = ListComp(xp, fp, it)
         new = Assign(new_it, list_comp)
-        msg = build_message(self, results['stmt0'], results['stmt1'], replacement=str(new))
+        msg = build_message(self, results['stmt0'], end_node=results['stmt1'], replacement=new)
 
         return None, msg
 

@@ -49,8 +49,8 @@ class FixKeyError(fixer_base.BaseFix):
         >
     """
 
-    CODE = 'ef016'
-    MESSAGE = '欠損値にはgetを使え'
+    CODE = 'X0002'
+    MESSAGE = '辞書のキーチェックには，getメソッドが便利です．'
     SEVERITY = 2
     CORRECTABLE = 1
     DOCSURL = ''

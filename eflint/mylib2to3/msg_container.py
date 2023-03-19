@@ -6,6 +6,10 @@ import textwrap
 from .fixer_base import BaseFix
 from .pytree import Base
 
+TEMPLATE = """
+【修正案】
+{}"""
+
 
 class MessageContainer(NamedTuple):
     """メッセージ受け渡し用のクラス"""
@@ -26,22 +30,23 @@ class MessageContainer(NamedTuple):
 def build_message(
     fixer: BaseFix,
     start_node: Base,
-    end_node: Base = None,
     *,
+    end_node: Base = None,
     code: str = None,
-    message: str = None,
+    message: str = "",
     severity: int = None,
     correctable: int = None,
-    replacement: Base = None
+    replacement: Base = None,
 ) -> MessageContainer:
     """整形したメッセージを構築する"""
 
     end_node = end_node or start_node
     code = code or fixer.CODE
-    message = textwrap.dedent(message or fixer.MESSAGE).strip()
     severity = severity if severity is not None else fixer.SEVERITY
     correctable = correctable if correctable is not None else fixer.CORRECTABLE
-    replacement = str(replacement)
+    replacement = str(replacement) if replacement else None
+    template = TEMPLATE.format(replacement) if replacement else ''
+    message = textwrap.dedent(message or fixer.MESSAGE).strip() + template
 
     msg = MessageContainer(
         start_node.get_lineno() - 1,

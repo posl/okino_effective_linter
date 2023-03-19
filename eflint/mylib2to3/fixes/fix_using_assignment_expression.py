@@ -18,7 +18,7 @@ from ..fixer_util import Walrus, Parens
 from ..msg_container import build_message
 
 
-class FixUsingAssignmentExpr(fixer_base.BaseFix):
+class FixUsingAssignmentExpression(fixer_base.BaseFix):
 
     PATTERN = r"""
         any<
@@ -29,15 +29,15 @@ class FixUsingAssignmentExpr(fixer_base.BaseFix):
         >
     """
 
-    CODE = 'ef010'
-    MESSAGE = 'walrus演算子を使え'
+    CODE = 'X0004'
+    MESSAGE = 'walrus演算子を使うと，簡潔に記述できる場合があります．'
     SEVERITY = 2
     CORRECTABLE = 1
     DOCSURL = ''
 
     def transform(self, node, results):
 
-        # ifブロック内で使われていて，ifより外で使用されていない，という条件があってもいいかも
+        # 現状上記のパターン全てに提案を出力するが，もう少し条件があってもよいかも
         target = results["id1"].clone()
         assign = results["id2"].clone()
 
@@ -54,10 +54,8 @@ class FixUsingAssignmentExpr(fixer_base.BaseFix):
                 break
 
         results["stmt1"].remove()
-        # suiteの最後の空行のコメントを無視する
-        # ちょっと強引なので直したい
         results["stmt2"].children[-1].children[-1].prefix = ''
-        msg = build_message(self, results["stmt1"], results["stmt2"], replacement=str(results["stmt2"]))
+        msg = build_message(self, results["stmt1"], results["stmt2"], replacement=results["stmt2"])
 
         return None, msg
 

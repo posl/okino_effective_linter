@@ -19,7 +19,7 @@ from ..fixer_util import is_number, is_string, Comparison
 from ..msg_container import build_message
 
 
-class FixMisplacedComparisonConst(fixer_base.BaseFix):
+class FixMisplacedComparisonConstant(fixer_base.BaseFix):
 
     BM_compatible = False
 
@@ -28,7 +28,7 @@ class FixMisplacedComparisonConst(fixer_base.BaseFix):
     """
 
     CODE = "C2201"
-    MESSAGE = "比較の左に定数を置くな"
+    MESSAGE = ''
     SEVERITY = 2
     CORRECTABLE = 1
     DOCSURL = ""

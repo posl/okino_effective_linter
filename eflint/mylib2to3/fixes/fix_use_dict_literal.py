@@ -1,38 +1,36 @@
-"""空のリストとの比較を暗黙的な比較に変換する
+"""空の辞書の初期化を簡単な記法に変換する
 
 * Change
 
-    if x == []:
-        print(x)
+    x = dict()
 
 into
 
-    if x:
-        print(x)
+    x = {}
 """
 
 
 from .. import fixer_base
+from ..fixer_util import EmptyDict
 from ..msg_container import build_message
 
 
-class FixImplicitBoolNotComparison(fixer_base.BaseFix):
+class FixUseDictLiteral(fixer_base.BaseFix):
 
     BM_compatible = True
 
     PATTERN = r"""
-    comparison< id=any '==' atom< '[' ']' > >
+    power< 'dict' trailer< '(' ')' > >
     """
 
-    CODE = 'C1803'
-    MESSAGE = '暗黙的な論理値への変換を使用する'
+    CODE = 'R1735'
+    MESSAGE = ''
     SEVERITY = 2
     CORRECTABLE = 1
     DOCSURL = ''
 
     def transform(self, node, results):
-        new = results["id"].clone()
-        new.prefix = ''
+        new = EmptyDict()
         msg = build_message(self, node, replacement=new)
         return node, msg
 

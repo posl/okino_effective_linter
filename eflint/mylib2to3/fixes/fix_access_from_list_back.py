@@ -23,8 +23,8 @@ class FixAccessFromListBack(fixer_base.BaseFix):
     power< id0=any trailer< '[' arith_expr< len=power< 'len' trailer< '(' id1=any ')' > > '-' any > ']' > >
     """
 
-    CODE = 'efxxx'
-    MESSAGE = '配列のうしろからの参照を簡略化する'
+    CODE = 'X0001'
+    MESSAGE = '配列の後ろからの参照はより簡潔に記述することができます．'
     SEVERITY = 2
     CORRECTABLE = 1
     DOCSURL = ''

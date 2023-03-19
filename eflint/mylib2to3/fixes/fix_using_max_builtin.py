@@ -28,8 +28,8 @@ class FixUsingMaxBuiltin(fixer_base.BaseFix):
     >
     """
 
-    CODE = 'R1703'
-    MESSAGE = '標準のmax()を使用する'
+    CODE = 'R1731'
+    MESSAGE = ''
     SEVERITY = 2
     CORRECTABLE = 1
     DOCSURL = ''

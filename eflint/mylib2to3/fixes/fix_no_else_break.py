@@ -35,7 +35,7 @@ class FixNoElseBreak(fixer_base.BaseFix):
     """
 
     CODE = 'R1723'
-    MESSAGE = '不要なelseを削除する'
+    MESSAGE = ''
     SEVERITY = 2
     CORRECTABLE = 1
     DOCSURL = ''

@@ -39,7 +39,7 @@ class FixElseIfUsed(fixer_base.BaseFix):
     """
 
     CODE = 'R5501'
-    MESSAGE = 'elseとifを合体する'
+    MESSAGE = ''
     SEVERITY = 2
     CORRECTABLE = 1
     DOCSURL = ''

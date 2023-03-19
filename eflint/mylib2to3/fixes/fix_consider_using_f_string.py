@@ -7,7 +7,7 @@ from ..fixer_util import String, is_string
 from ..msg_container import build_message
 
 
-class FixToFstr(fixer_base.BaseFix):
+class FixConsiderUsingFString(fixer_base.BaseFix):
 
     BM_compatible = True
 
@@ -15,15 +15,13 @@ class FixToFstr(fixer_base.BaseFix):
               term< text=any '%' atom< '(' items=testlist_gexp ')' > >
               """
 
-    CODE = 'ef004'
-    MESSAGE = """
-    修正案
-    {}
-    """
+    CODE = 'C0209'
+    MESSAGE = ''
     SEVERITY = 2
     CORRECTABLE = 1
     DOCSURL = ''
 
+    # TODO: str.format()にも対応する
     def transform(self, node, results):
         text = results["text"]
         items = results["items"]
@@ -70,7 +68,7 @@ class FixToFstr(fixer_base.BaseFix):
             new_text, _ = repattern.subn(f'{esc}{{{arg}{colon}{sign}{pad}{cat}{form}}}', new_text, count=1)
 
         new_stmt = String(f'f{new_text}', prefix=node.prefix)
-        msg = build_message(self, node, message=self.MESSAGE.format(str(new_stmt)), replacement=new_stmt)
+        msg = build_message(self, node, replacement=new_stmt)
 
         return new_stmt, msg
 
